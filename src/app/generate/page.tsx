@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import { exportProposalToPDF } from "@/lib/pdf-export";
 
 export default function GeneratePage() {
   const [form, setForm] = useState({
@@ -32,6 +34,12 @@ export default function GeneratePage() {
       setResult("Failed to generate. Please try again.");
     }
     setLoading(false);
+  };
+
+  const handleDownloadPDF = () => {
+    if (!result) return;
+    const filename = `proposal-${form.clientName || "draft"}-${Date.now()}.pdf`;
+    exportProposalToPDF(result, filename);
   };
 
   return (
@@ -101,13 +109,20 @@ export default function GeneratePage() {
         {/* Output */}
         <div>
           <h2 className="text-2xl font-bold mb-6">Preview</h2>
-          <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 min-h-[500px] whitespace-pre-wrap text-sm font-[family-name:var(--font-geist-mono)]">
-            {result || <span className="text-gray-600">Your generated proposal will appear here...</span>}
+          <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 min-h-[500px] text-sm prose prose-invert prose-sm max-w-none">
+            {result ? (
+              <ReactMarkdown>{result}</ReactMarkdown>
+            ) : (
+              <span className="text-gray-600">Your generated proposal will appear here...</span>
+            )}
           </div>
           {result && (
             <div className="mt-4 flex gap-3">
               <button onClick={() => navigator.clipboard.writeText(result)} className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm transition">
                 📋 Copy Markdown
+              </button>
+              <button onClick={handleDownloadPDF} className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-sm transition font-semibold">
+                📄 Download PDF
               </button>
             </div>
           )}
