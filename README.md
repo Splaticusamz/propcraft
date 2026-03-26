@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PropCraft ✍️
+
+**AI-powered SOW & proposal generator for freelancers.**
+
+Generate professional Statements of Work, project proposals, and client contracts in seconds — not hours.
+
+## The Problem
+
+73M+ US freelancers waste 3-5 hours per proposal. Most copy-paste from old docs, miss key sections, and undercharge because scoping is painful.
+
+## The Solution
+
+PropCraft uses AI to generate polished, complete proposals from a simple form. Fill in the basics — get a professional document ready to send.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────┐
+│            Next.js 14 (App Router)       │
+│  ┌───────────┐  ┌──────────┐  ┌───────┐ │
+│  │ Landing   │  │ Form/    │  │ API   │ │
+│  │ Page      │  │ Editor   │  │ Routes│ │
+│  └───────────┘  └──────────┘  └───┬───┘ │
+│                                    │     │
+│  ┌────────────────────────────────┐│     │
+│  │ Tailwind CSS + shadcn/ui      ││     │
+│  └────────────────────────────────┘│     │
+└────────────────────────────────────┼─────┘
+                                     │
+        ┌────────────┬───────────────┼──────────┐
+        │            │               │          │
+   ┌────▼───┐  ┌────▼────┐  ┌──────▼──┐  ┌────▼────┐
+   │Supabase│  │ Stripe  │  │ OpenAI  │  │ Vercel  │
+   │Auth +  │  │Payments │  │  API    │  │ Deploy  │
+   │Usage DB│  │$9/$19/mo│  │ GPT-4o  │  │  Edge   │
+   └────────┘  └─────────┘  └─────────┘  └─────────┘
+```
+
+## Revenue Model
+
+| Tier | Price | Docs/Month | Features |
+|------|-------|-----------|----------|
+| Free | $0 | 2 | Basic templates, markdown export |
+| Pro | $9/mo | 10 | All templates, PDF + DOCX export |
+| Unlimited | $19/mo | Unlimited | Custom branding, template library |
+
+**Target:** $1K MRR within 60 days.
+
+## Tech Stack
+
+- **Framework:** Next.js 14 (App Router, TypeScript)
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Auth & DB:** Supabase (magic link auth, usage tracking)
+- **AI:** OpenAI API (GPT-4o)
+- **Payments:** Stripe Checkout + Customer Portal
+- **Hosting:** Vercel (Edge Functions)
+- **Export:** react-pdf, docx.js
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
+cp .env.example .env.local
+# Fill in: OPENAI_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY, STRIPE_SECRET_KEY
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+├── app/
+│   ├── page.tsx          # Landing page
+│   ├── generate/         # Proposal form + generation
+│   ├── dashboard/        # User's proposals
+│   └── api/
+│       ├── generate/     # AI generation endpoint
+│       ├── stripe/       # Webhook + checkout
+│       └── auth/         # Supabase auth callbacks
+├── components/           # Reusable UI components
+├── lib/                  # Utilities, AI prompts, Supabase client
+└── types/                # TypeScript types
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## License
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Proprietary. All rights reserved.
